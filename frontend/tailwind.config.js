@@ -57,7 +57,11 @@ export default {
         'pulse-soft': 'pulse-soft 3.4s ease-in-out infinite',
         'border-spin': 'border-spin 6s linear infinite',
         marquee: 'marquee 32s linear infinite',
-        'fade-up': 'fade-up .6s cubic-bezier(.22,1,.36,1) both',
+        // `backwards` (not `both`): the entrance holds its start state during the
+        // stagger delay, then releases the element back to its own transform.
+        // With `both` the final keyframe's translateY(0) would stick forever and
+        // override the pointer-tracked tilt set via inline style.
+        'fade-up': 'fade-up .6s cubic-bezier(.22,1,.36,1) backwards',
       },
       keyframes: {
         float: {

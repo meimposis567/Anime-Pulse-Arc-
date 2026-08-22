@@ -76,11 +76,14 @@ function Navbar() {
                 className="relative h-9 w-9 object-contain drop-shadow-[0_0_12px_rgba(34,211,238,.75)]"
               />
             </span>
-            <span className="leading-none">
-              <span className="arc-title block font-display text-[1.15rem] font-bold tracking-wide">
+            {/* Hidden below sm: at 390px the wordmark wrapped to three lines
+                and pushed the navbar to 99px tall. The logo still carries the
+                brand there, and the hero repeats the name immediately below. */}
+            <span className="hidden leading-none sm:block">
+              <span className="arc-title block whitespace-nowrap font-display text-[1.15rem] font-bold tracking-wide">
                 ANIME PULSE ARC
               </span>
-              <span className="mt-0.5 block text-[9px] tracking-[0.42em] text-slate-500">
+              <span className="mt-0.5 hidden text-[9px] tracking-[0.42em] text-slate-500 md:block">
                 アニメ・パルス・アーク
               </span>
             </span>

@@ -171,6 +171,16 @@ body.otaku {
   100% { transform: translate3d(14vw, 108vh, 0) rotate(520deg); opacity: 0; }
 }
 
+
+/* ── Positioning fallbacks ──────────────────────────────────────────
+   These live in :where() so they carry ZERO specificity. This file is
+   imported after Tailwind's utilities layer, so a normal `.arc-ring
+   { position: relative }` would beat `lg:sticky` / `absolute` applied
+   in the markup and silently break layout. :where() lets the utility win. */
+:where(.arc-ring, .arc-score, .arc-btn, .arc-skeleton, .arc-rule, .arc-glitch, .arc-navlink, .arc-card, .card) {
+  position: relative;
+}
+
 /* ═══════════════ Typography ═══════════════ */
 .font-display { font-family: 'Chakra Petch', ui-sans-serif, system-ui, sans-serif; }
 
@@ -249,7 +259,6 @@ body.otaku {
 
 /* Rotating conic gradient border */
 .arc-ring {
-  position: relative;
   isolation: isolate;
 }
 .arc-ring::before {
@@ -285,7 +294,6 @@ body.otaku {
 /* ═══════════════ Anime card ═══════════════ */
 .arc-card,
 .card {
-  position: relative;
   border-radius: 1.25rem;
   overflow: hidden;
   background: var(--glass);
@@ -374,7 +382,6 @@ body.otaku {
 
 /* ═══════════════ Buttons, pills, inputs ═══════════════ */
 .arc-btn {
-  position: relative;
   display: inline-flex;
   align-items: center;
   gap: .5rem;
@@ -447,7 +454,6 @@ select.arc-input option { background: #0b0819; color: #e6e8f2; }
 /* ═══════════════ Score ring ═══════════════ */
 .arc-score {
   --pct: 0;
-  position: relative;
   display: grid;
   place-items: center;
   width: 2.6rem;
@@ -468,7 +474,6 @@ select.arc-input option { background: #0b0819; color: #e6e8f2; }
 
 /* ═══════════════ Shimmer skeleton ═══════════════ */
 .arc-skeleton {
-  position: relative;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.045);
 }
@@ -495,7 +500,6 @@ select.arc-input option { background: #0b0819; color: #e6e8f2; }
 .arc-rule {
   height: 1px;
   background: linear-gradient(90deg, var(--cyber), var(--arcane) 40%, transparent);
-  position: relative;
 }
 .arc-rule::after {
   content: '';
@@ -509,7 +513,6 @@ select.arc-input option { background: #0b0819; color: #e6e8f2; }
 
 /* ═══════════════ Nav underline ═══════════════ */
 .arc-navlink {
-  position: relative;
   padding: .35rem .1rem;
   transition: color .3s ease, text-shadow .3s ease;
 }

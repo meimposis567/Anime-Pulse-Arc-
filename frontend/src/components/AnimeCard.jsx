@@ -92,12 +92,14 @@ export default function AnimeCard({ item, index = 0 }) {
 
         {/* Score ring */}
         {score ? (
-          <div
-            className="arc-score absolute right-2.5 top-2.5 text-[11px] font-bold"
-            style={{ '--pct': score, '--ring-color': ringColor(score) }}
-            aria-label={`Score ${score} out of 100`}
-          >
-            <span>{score}</span>
+          <div className="absolute right-2.5 top-2.5">
+            <div
+              className="arc-score text-[11px] font-bold"
+              style={{ '--pct': score, '--ring-color': ringColor(score) }}
+              aria-label={`Score ${score} out of 100`}
+            >
+              <span>{score}</span>
+            </div>
           </div>
         ) : null}
 
