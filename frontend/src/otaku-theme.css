@@ -194,7 +194,9 @@ body.otaku {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  background-size: 200% auto;
+  /* 200% put only half the ramp on screen at a time, so the title read as
+     flat magenta. 130% keeps cyan, violet and pink all visible while it pans. */
+  background-size: 130% auto;
   animation: title-pan 8s ease-in-out infinite;
 }
 @keyframes title-pan {

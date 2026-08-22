@@ -10,6 +10,8 @@
 [![License](https://img.shields.io/badge/license-proprietary-red)](LICENSE)
 [![Usage](https://img.shields.io/badge/usage-view%20only-lightgrey)](LICENSE)
 
+<img src="docs/social-preview.png" alt="Anime Pulse ARC home page" width="100%">
+
 </div>
 
 ---

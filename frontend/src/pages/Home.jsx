@@ -11,7 +11,7 @@ const TICKER = [
 
 function Hero() {
   return (
-    <section className="relative overflow-hidden px-4 pb-4 pt-14 sm:pt-20">
+    <section className="relative overflow-hidden px-4 pb-4 pt-10 sm:pt-14">
       <div className="arc-speedlines" aria-hidden="true" />
 
       <div className="relative mx-auto max-w-4xl text-center">
@@ -52,10 +52,10 @@ function Hero() {
           {[...TICKER, ...TICKER].map((t, i) => (
             <span
               key={i}
-              className="mx-6 font-display text-[11px] font-semibold tracking-[0.3em] text-slate-600"
+              className="mx-6 font-display text-[11px] font-semibold tracking-[0.3em] text-slate-400/70"
             >
               {t}
-              <span className="ml-6 text-cyan-500/40">◆</span>
+              <span className="ml-6 text-cyan-400/60">◆</span>
             </span>
           ))}
         </div>
@@ -89,7 +89,7 @@ export default function Home() {
               </div>
               <Link
                 to="/recommendation"
-                className="hidden shrink-0 font-display text-xs font-semibold tracking-widest text-slate-400 transition-colors hover:text-cyan-300 sm:block"
+                className="hidden shrink-0 font-display text-xs font-semibold tracking-widest text-slate-300 transition-colors hover:text-cyan-300 sm:block"
               >
                 FILTER ALL →
               </Link>
