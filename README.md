@@ -10,8 +10,6 @@
 [![License](https://img.shields.io/badge/license-proprietary-red)](LICENSE)
 [![Usage](https://img.shields.io/badge/usage-view%20only-lightgrey)](LICENSE)
 
-<img src="docs/home-screenshot.png" alt="Anime Pulse ARC home page" width="100%">
-
 </div>
 
 ---
@@ -337,8 +335,6 @@ curl http://localhost:5001/api/favorites -H "Authorization: Bearer <TOKEN>"
 | `POST` | `/api/reviews/:animeId` | `{ rating, content }` | Post a review |
 | `DELETE` | `/api/reviews/:animeId` | — | Delete your own review |
 
-Full request/response details: [`docs/API.md`](docs/API.md).
-
 ---
 
 ## 📁 Project Structure
@@ -391,10 +387,6 @@ Anime-Pulse-Arc-/
 │   ├── vite.config.js
 │   ├── Dockerfile
 │   └── package.json
-│
-├── docs/
-│   ├── API.md                      # Endpoint reference
-│   └── UI_THEME.md                 # Otaku Ultra theme notes
 │
 ├── docker-compose.yml              # frontend + backend + mongo
 ├── .gitignore
