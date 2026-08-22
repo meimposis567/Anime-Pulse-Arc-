@@ -2,6 +2,7 @@ import React, { Suspense, useMemo } from 'react'
 import { Routes, Route, NavLink, useLocation, Link } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Home as HomeIcon, Sparkles, Github } from 'lucide-react'
+import ArcIntro, { useIntro } from './components/ArcIntro.jsx'
 
 const Home = React.lazy(() => import('./pages/Home.jsx'))
 const Recommendation = React.lazy(() => import('./pages/Recommendation.jsx'))
@@ -17,13 +18,33 @@ export const ApiContext = React.createContext(API_BASE)
 const ArcBackground = React.memo(function ArcBackground() {
   const petals = useMemo(
     () =>
-      Array.from({ length: 14 }, (_, i) => ({
-        left: `${(i * 7.3 + 4) % 100}%`,
+      Array.from({ length: 16 }, (_, i) => ({
+        left: `${(i * 6.4 + 3) % 100}%`,
         duration: `${11 + (i % 5) * 3}s`,
         delay: `${-(i * 1.7) % 18}s`,
         scale: 0.5 + ((i % 4) * 0.22),
-        hue: i % 3 === 0 ? 'rgba(95,240,255,.75)' : undefined,
+        hue: i % 3 === 0 ? 'rgba(95,240,255,.8)' : undefined,
       })),
+    []
+  )
+
+  // Rising bokeh motes — cheap, GPU-composited, adds depth over the aurora.
+  const motes = useMemo(
+    () =>
+      Array.from({ length: 26 }, (_, i) => {
+        const size = 2 + (i % 5)
+        return {
+          left: `${(i * 3.9 + 2) % 100}%`,
+          size: `${size}px`,
+          duration: `${16 + (i % 7) * 4}s`,
+          delay: `${-(i * 2.3) % 26}s`,
+          tint:
+            i % 4 === 0 ? 'rgba(95,240,255,.95)'
+            : i % 4 === 1 ? 'rgba(255,111,174,.9)'
+            : i % 4 === 2 ? 'rgba(192,132,252,.9)'
+            : 'rgba(255,255,255,.9)',
+        }
+      }),
     []
   )
 
@@ -32,9 +53,29 @@ const ArcBackground = React.memo(function ArcBackground() {
       <div className="arc-orb arc-orb--1" />
       <div className="arc-orb arc-orb--2" />
       <div className="arc-orb arc-orb--3" />
+      <div className="arc-orb arc-orb--4" />
+      <div className="arc-aurora" />
+      <div className="arc-streaks" />
       <div className="arc-grid" />
       <div className="arc-tone" />
       <div className="arc-stars" />
+      <div className="arc-motes">
+        {motes.map((m, i) => (
+          <span
+            key={i}
+            className="mote"
+            style={{
+              left: m.left,
+              bottom: 0,
+              width: m.size,
+              height: m.size,
+              animationDuration: m.duration,
+              animationDelay: m.delay,
+              background: `radial-gradient(circle, ${m.tint}, transparent 68%)`,
+            }}
+          />
+        ))}
+      </div>
       <div className="arc-petals">
         {petals.map((p, i) => (
           <span
@@ -50,6 +91,7 @@ const ArcBackground = React.memo(function ArcBackground() {
           />
         ))}
       </div>
+      <div className="arc-vignette" />
     </div>
   )
 })
@@ -178,8 +220,13 @@ function Footer() {
 export default function App() {
   const location = useLocation()
 
+  const [showIntro, dismissIntro] = useIntro()
+
   return (
     <ApiContext.Provider value={API_BASE}>
+      <AnimatePresence>
+        {showIntro && <ArcIntro key="intro" onDone={dismissIntro} />}
+      </AnimatePresence>
       <ArcBackground />
       <Navbar />
       <Suspense fallback={<RouteFallback />}>
