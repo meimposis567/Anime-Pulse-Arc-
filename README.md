@@ -481,18 +481,19 @@ Auth routes are never exempt from limiting, and `trust proxy` is pinned to one h
 
 **Proprietary — All Rights Reserved.** © 2025 Akash S.M, Akash S, Chandru P, Aaron Marshall A.
 
-This repository is public so the work can be **read and evaluated**. It is not open source.
+This repository is public so the work can be **viewed**. It is **not open source**.
 
 | | |
 | --- | --- |
-| ✅ **You may** | View and read the source; reference this project when evaluating the authors' work |
-| ❌ **You may not** | Copy, modify, redistribute, deploy, or reuse any part of it in another project |
+| ✅ **Permitted** | Viewing this repository's contents on GitHub, for informational purposes only |
+| ❌ **Not permitted** without prior written consent | Copying or reproducing · modifying or creating derivative works · distributing, publishing or sublicensing · using the Software for any purpose, commercial or non-commercial · reverse engineering |
 
-Any use beyond viewing requires prior written permission — see [LICENSE](LICENSE) for the
-full terms and contact details.
+All rights not expressly granted are reserved. See [LICENSE](LICENSE) for the binding terms
+and for how to request permission.
 
-Third-party dependencies remain under their own licences. Anime titles, artwork and metadata
-from AniList remain the property of their respective creators, studios and licensors.
+Third-party dependencies remain under their own licences, and anime titles, artwork and
+metadata from AniList remain the property of their respective creators, studios and licensors —
+neither is restricted by this notice.
 
 <div align="center">
 

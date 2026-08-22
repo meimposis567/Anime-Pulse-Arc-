@@ -1,52 +1,60 @@
-Anime Pulse ARC — Proprietary License
+Anime Pulse ARC — Proprietary Software License
 All Rights Reserved
 
 Copyright (c) 2025 Akash S.M, Akash S, Chandru P, Aaron Marshall A
 
-This software and its accompanying source code, documentation, designs and
-assets (the "Software") are the exclusive property of the copyright holders
-named above. The Software is made publicly visible for reference, evaluation
-and portfolio purposes only.
 
-PERMITTED
+This repository, including but not limited to all source code, object code,
+documentation, designs, assets, product concepts, and any other materials
+contained within it (the "Software"), is the exclusive property of the
+copyright holders.
 
-  - Viewing and reading the source code.
-  - Referencing the Software when discussing or evaluating the work of its
-    authors.
+Permission is granted to view this repository's contents on GitHub for
+informational purposes only.
 
-NOT PERMITTED without prior written permission from the copyright holders
+Except as expressly permitted above, no permission is granted, and no
+person or entity may, without the prior express written consent of the
+copyright holders:
 
-  - Copying, reproducing or republishing the Software, in whole or in part.
-  - Modifying, adapting, translating or creating derivative works.
-  - Distributing, sublicensing, selling, renting or otherwise transferring
-    the Software.
-  - Deploying, hosting or running the Software for any purpose beyond
-    private, local evaluation.
-  - Using the Software, or any portion of it, in any other project, whether
-    commercial or non-commercial.
-  - Removing, obscuring or altering this notice or any copyright, authorship
-    or attribution notice contained in the Software.
-
-No licence, right or interest in any trademark, trade name, logo or service
-mark of the copyright holders is granted by this notice.
-
-To request permission for any use not expressly permitted above, contact the
-copyright holders through https://github.com/meimposis567.
-
-THIRD-PARTY COMPONENTS
-
-The Software depends on third-party open-source packages, each of which
-remains governed by its own licence. This notice applies solely to the
-original code and content authored by the copyright holders. Anime titles,
-artwork and metadata retrieved through the AniList API remain the property of
-their respective creators, studios and licensors.
-
-NO WARRANTY
+ 1. Copy, reproduce, or duplicate the Software, in whole or in part;
+ 2. Modify, adapt, translate, or create derivative works based on the
+    Software;
+ 3. Distribute, publish, sublicense, lease, rent, or otherwise make the
+    Software available to any third party;
+ 4. Use the Software, in whole or in part, for any commercial or
+    non-commercial purpose;
+ 5. Reverse engineer, decompile, or disassemble the Software, except to
+    the extent such restriction is prohibited by applicable law.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER
+LIABILITY ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE
+USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+All rights not expressly granted herein are reserved by the copyright
+holders. For permission requests, contact the repository owners.
+
+
+THIRD-PARTY COMPONENTS AND CONTENT
+
+The terms above apply solely to the original work authored by the copyright
+holders. They do not apply to, and do not purport to restrict, the following:
+
+ a. Third-party open-source packages on which the Software depends. Each
+    such package remains governed exclusively by its own licence, and
+    nothing in this notice limits any right granted by those licences.
+
+ b. Anime titles, synopses, artwork, character data and other metadata
+    retrieved through the AniList API, which remain the property of their
+    respective creators, studios and licensors. Anime Pulse ARC is an
+    unofficial, non-commercial project and is not affiliated with AniList
+    or any streaming platform.
+
+
+PERMISSION REQUESTS
+
+Direct any request for permission not expressly granted above to the
+copyright holders via https://github.com/meimposis567 — either by opening an
+issue on this repository or through the contact details on that profile.
