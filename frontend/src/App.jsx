@@ -1,7 +1,7 @@
 import React, { Suspense, useMemo } from 'react'
 import { Routes, Route, NavLink, useLocation, Link } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Home as HomeIcon, Sparkles, Github } from 'lucide-react'
+import { Home as HomeIcon, Sparkles } from 'lucide-react'
 import ArcIntro, { useIntro } from './components/ArcIntro.jsx'
 
 const Home = React.lazy(() => import('./pages/Home.jsx'))
@@ -151,15 +151,6 @@ function Navbar() {
                 )}
               </NavLink>
             ))}
-            <a
-              href="https://github.com/meimposis567/Anime-Pulse-Arc-"
-              target="_blank"
-              rel="noreferrer"
-              className="text-slate-500 transition-colors duration-300 hover:text-pink-300"
-              aria-label="View source on GitHub"
-            >
-              <Github size={17} />
-            </a>
           </div>
         </div>
       </nav>

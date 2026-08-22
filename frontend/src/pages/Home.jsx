@@ -15,17 +15,6 @@ function Hero() {
       <div className="arc-speedlines" aria-hidden="true" />
 
       <div className="relative mx-auto max-w-4xl text-center">
-        {/* Eyebrow */}
-        <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-cyan-400/25 bg-cyan-400/[0.07] px-3.5 py-1 backdrop-blur-sm">
-          <span className="relative flex h-1.5 w-1.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-400 opacity-75" />
-            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-cyan-400" />
-          </span>
-          <span className="font-display text-[11px] font-semibold tracking-[0.22em] text-cyan-200">
-            LIVE FROM ANILIST
-          </span>
-        </div>
-
         {/* Title */}
         <h1 className="font-display text-[2.6rem] font-bold leading-[0.98] tracking-tight sm:text-6xl lg:text-7xl">
           <span className="arc-title arc-glitch" data-text="ANIME PULSE">ANIME PULSE</span>
