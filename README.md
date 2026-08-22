@@ -26,7 +26,6 @@
 - [API Reference](#-api-reference)
 - [Project Structure](#-project-structure)
 - [Security & Configuration](#-security--configuration)
-- [Security Policy](SECURITY.md)
 - [Future Enhancements](#-future-enhancements)
 - [Team & Credits](#-team--credits)
 - [License](#-license)
@@ -390,7 +389,6 @@ Anime-Pulse-Arc-/
 │
 ├── docker-compose.yml              # frontend + backend + mongo
 ├── .gitignore
-├── SECURITY.md                     # Security policy + deployment checklist
 ├── LICENSE
 └── README.md
 ```
@@ -398,8 +396,6 @@ Anime-Pulse-Arc-/
 ---
 
 ## 🔒 Security & Configuration
-
-Full details and a deployment checklist live in [SECURITY.md](SECURITY.md).
 
 ### Secrets
 
