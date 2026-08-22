@@ -467,7 +467,7 @@ Auth routes are never exempt from limiting, and `trust proxy` is pinned to one h
 | **Chandru P** | [@MrChandru345](https://github.com/MrChandru345) |
 | **Aaron Marshall A** | [@AaronMarshall2005](https://github.com/AaronMarshall2005) |
 
-© 2025 Akash S.M, Akash S, Chandru P and Aaron Marshall A — **all rights reserved**.
+© 2025 Akash S.M ([@meimposis567](https://github.com/meimposis567)), Akash S ([@akash02062005](https://github.com/akash02062005)), Chandru P ([@MrChandru345](https://github.com/MrChandru345)) and Aaron Marshall A ([@AaronMarshall2005](https://github.com/AaronMarshall2005)) — **all rights reserved**.
 
 ### Acknowledgements
 
@@ -479,7 +479,7 @@ Auth routes are never exempt from limiting, and `trust proxy` is pinned to one h
 
 ## 📄 License
 
-**Proprietary — All Rights Reserved.** © 2025 Akash S.M, Akash S, Chandru P, Aaron Marshall A.
+**Proprietary — All Rights Reserved.** © 2025 the Anime Pulse ARC team — Akash S.M ([@meimposis567](https://github.com/meimposis567)), Akash S ([@akash02062005](https://github.com/akash02062005)), Chandru P ([@MrChandru345](https://github.com/MrChandru345)), Aaron Marshall A ([@AaronMarshall2005](https://github.com/AaronMarshall2005)).
 
 This repository is public so the work can be **viewed**. It is **not open source**.
 
