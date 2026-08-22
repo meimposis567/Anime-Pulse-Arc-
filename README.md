@@ -7,7 +7,8 @@
 [![Stack](https://img.shields.io/badge/stack-MERN-00d8ff)](#-technology-stack)
 [![Node](https://img.shields.io/badge/node-%3E%3D18-3c873a)](https://nodejs.org)
 [![React](https://img.shields.io/badge/react-18-61dafb)](https://react.dev)
-[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![License](https://img.shields.io/badge/license-proprietary-red)](LICENSE)
+[![Usage](https://img.shields.io/badge/usage-view%20only-lightgrey)](LICENSE)
 
 </div>
 
@@ -466,7 +467,7 @@ Auth routes are never exempt from limiting, and `trust proxy` is pinned to one h
 | **Chandru P** | [@MrChandru345](https://github.com/MrChandru345) |
 | **Aaron Marshall A** | [@AaronMarshall2005](https://github.com/AaronMarshall2005) |
 
-© 2025 Akash S.M, Akash S, Chandru P and Aaron Marshall A — **all rights reserved**, except as granted by the [MIT License](LICENSE).
+© 2025 Akash S.M, Akash S, Chandru P and Aaron Marshall A — **all rights reserved**.
 
 ### Acknowledgements
 
@@ -478,7 +479,20 @@ Auth routes are never exempt from limiting, and `trust proxy` is pinned to one h
 
 ## 📄 License
 
-Released under the **MIT License** — see [LICENSE](LICENSE) for the full text.
+**Proprietary — All Rights Reserved.** © 2025 Akash S.M, Akash S, Chandru P, Aaron Marshall A.
+
+This repository is public so the work can be **read and evaluated**. It is not open source.
+
+| | |
+| --- | --- |
+| ✅ **You may** | View and read the source; reference this project when evaluating the authors' work |
+| ❌ **You may not** | Copy, modify, redistribute, deploy, or reuse any part of it in another project |
+
+Any use beyond viewing requires prior written permission — see [LICENSE](LICENSE) for the
+full terms and contact details.
+
+Third-party dependencies remain under their own licences. Anime titles, artwork and metadata
+from AniList remain the property of their respective creators, studios and licensors.
 
 <div align="center">
 

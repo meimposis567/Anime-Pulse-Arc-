@@ -1,16 +1,47 @@
-MIT License
+Anime Pulse ARC — Proprietary License
+All Rights Reserved
 
 Copyright (c) 2025 Akash S.M, Akash S, Chandru P, Aaron Marshall A
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+This software and its accompanying source code, documentation, designs and
+assets (the "Software") are the exclusive property of the copyright holders
+named above. The Software is made publicly visible for reference, evaluation
+and portfolio purposes only.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+PERMITTED
+
+  - Viewing and reading the source code.
+  - Referencing the Software when discussing or evaluating the work of its
+    authors.
+
+NOT PERMITTED without prior written permission from the copyright holders
+
+  - Copying, reproducing or republishing the Software, in whole or in part.
+  - Modifying, adapting, translating or creating derivative works.
+  - Distributing, sublicensing, selling, renting or otherwise transferring
+    the Software.
+  - Deploying, hosting or running the Software for any purpose beyond
+    private, local evaluation.
+  - Using the Software, or any portion of it, in any other project, whether
+    commercial or non-commercial.
+  - Removing, obscuring or altering this notice or any copyright, authorship
+    or attribution notice contained in the Software.
+
+No licence, right or interest in any trademark, trade name, logo or service
+mark of the copyright holders is granted by this notice.
+
+To request permission for any use not expressly permitted above, contact the
+copyright holders through https://github.com/meimposis567.
+
+THIRD-PARTY COMPONENTS
+
+The Software depends on third-party open-source packages, each of which
+remains governed by its own licence. This notice applies solely to the
+original code and content authored by the copyright holders. Anime titles,
+artwork and metadata retrieved through the AniList API remain the property of
+their respective creators, studios and licensors.
+
+NO WARRANTY
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
