@@ -25,6 +25,7 @@
 - [API Reference](#-api-reference)
 - [Project Structure](#-project-structure)
 - [Security & Configuration](#-security--configuration)
+- [Security Policy](SECURITY.md)
 - [Future Enhancements](#-future-enhancements)
 - [Team & Credits](#-team--credits)
 - [License](#-license)
@@ -80,7 +81,8 @@ favourites, reviews, and a per-title guide that lays out relations and where to 
 
 - ⚡ **LRU response cache** — 500-entry, 5-minute TTL cache in front of AniList; repeat queries never leave the server.
 - 🔁 **Retry with backoff** — up to three attempts with a 20-second abort timeout per upstream call.
-- 🛡️ **Hardened API** — Helmet, an origin allow-list for CORS, a 300-request/15-minute rate limiter, gzip compression, and a 1 MB JSON body cap.
+- 🛡️ **Hardened API** — Helmet, a CORS origin allow-list, tiered rate limiting (stricter on auth than on browsing), NoSQL-injection guards, gzip compression, and a 1 MB JSON body cap.
+- 🚫 **No insecure defaults** — the server refuses to boot on a missing, short, or placeholder `JWT_SECRET` rather than silently signing tokens with a key published in this repository.
 - 🩹 **Graceful degradation** — if MongoDB or AniList is unavailable, the server still boots and discovery routes still answer instead of blanking the UI.
 - 🎨 **"Otaku Ultra" theme** — animated cosmic gradient, glassmorphic neon cards, 3D hover tilt, and full `prefers-reduced-motion` support.
 - 🐳 **One-command Docker setup** — frontend, backend and MongoDB via `docker compose`.
@@ -324,6 +326,7 @@ curl http://localhost:5001/api/favorites -H "Authorization: Bearer <TOKEN>"
 | --- | --- | --- | --- |
 | `POST` | `/api/auth/register` | `{ username, email, password }` | Create an account |
 | `POST` | `/api/auth/login` | `{ email, password }` | Obtain a JWT |
+| `GET` | `/api/auth/me` | — | The signed-in user's own profile |
 | `GET` | `/api/favorites` | — | List the signed-in user's favourites |
 | `POST` | `/api/favorites` | `{ animeId, title, coverImage }` | Add a favourite |
 | `DELETE` | `/api/favorites/:animeId` | — | Remove a favourite |
@@ -342,9 +345,14 @@ Anime-Pulse-Arc-/
 ├── backend/                        # Express API server
 │   ├── src/
 │   │   ├── index.js                # Entry: middleware, AniList proxy, cache, routes
+│   │   ├── config.js               # Fail-fast env validation (no insecure defaults)
 │   │   ├── db.js                   # MongoDB connection helper
 │   │   ├── middleware/
-│   │   │   └── auth.js             # JWT verification middleware
+│   │   │   ├── auth.js             # JWT signing + verification (HS256 pinned)
+│   │   │   └── rateLimit.js        # Per-route rate limit buckets
+│   │   ├── utils/
+│   │   │   ├── asyncHandler.js     # Async wrapper + typed HttpError
+│   │   │   └── validate.js         # Input guards (NoSQL injection, passwords)
 │   │   ├── models/
 │   │   │   ├── User.js             # Account + bcrypt password helpers
 │   │   │   ├── Favorite.js         # Saved titles per user
@@ -387,6 +395,7 @@ Anime-Pulse-Arc-/
 │
 ├── docker-compose.yml              # frontend + backend + mongo
 ├── .gitignore
+├── SECURITY.md                     # Security policy + deployment checklist
 ├── LICENSE
 └── README.md
 ```
@@ -395,18 +404,39 @@ Anime-Pulse-Arc-/
 
 ## 🔒 Security & Configuration
 
-- **No secrets in the repository.** `.env` files, keys, certificates and credential files are excluded by [`.gitignore`](.gitignore); only `.env.example` templates are tracked.
-- **Passwords are never stored in plain text** — bcrypt hashing with a per-user salt.
-- **JWTs expire after seven days** and are verified on every protected route.
-- **Rate limiting** — 300 requests per 15 minutes per IP on discovery routes.
-- **Helmet** sets secure HTTP headers; `x-powered-by` is disabled.
-- **CORS** uses an explicit origin allow-list; add your deployed domain via `FRONTEND_URL`.
-- **Request size cap** — JSON bodies are limited to 1 MB.
+Full details and a deployment checklist live in [SECURITY.md](SECURITY.md).
 
-> If a real connection string or secret was ever exposed, **rotate it immediately** — removing it from a
-> file is not enough once it has been shared.
+### Secrets
 
----
+- **No secret has a fallback value.** [`backend/src/config.js`](backend/src/config.js) validates the environment at boot and **exits the process** if `JWT_SECRET` is missing, shorter than 32 characters, or left as a placeholder like `dev_secret`. A hardcoded fallback in public source is a published signing key.
+- `.env` files, keys, certificates and credential files are excluded by [`.gitignore`](.gitignore); only `.env.example` templates are tracked.
+
+### Authentication
+
+- **bcrypt** password hashing at cost 12; `passwordHash` is `select: false` and stripped in `toJSON`, so it cannot leak through a stray `res.json(user)`.
+- **HS256 pinned** at verification — tokens presented as `alg: none` or signed with another algorithm are rejected.
+- Login responds identically for an unknown email and a wrong password, with a dummy bcrypt comparison on the miss, so timing does not reveal which addresses are registered.
+- Registration requires 8+ characters across at least three character classes and rejects common passwords.
+
+### Rate limiting
+
+| Scope | Budget |
+| --- | --- |
+| General API | 300 requests / 15 min |
+| `POST /api/auth/login` | 10 **failed** attempts / 15 min |
+| `POST /api/auth/register` | 5 accounts / hour |
+| Authenticated writes | 100 requests / 15 min |
+
+Auth routes are never exempt from limiting, and `trust proxy` is pinned to one hop so `X-Forwarded-For` cannot be spoofed to reset a bucket.
+
+### Input & errors
+
+- Every value reaching a query is proven to be a primitive string first, blocking NoSQL injection via bodies like `{"email": {"$gt": ""}}`. Mongoose `sanitizeFilter` is a second layer.
+- JSON bodies capped at 1 MB, search queries at 100 characters, numeric params must be positive integers.
+- Only application-raised errors return their message; everything else becomes a generic `"Something went wrong."`, with full detail kept in the server log.
+- **Helmet** sets secure headers, `x-powered-by` is disabled, and CORS uses an explicit origin allow-list.
+
+> ⚠️ If a credential was ever shared, zipped or pasted anywhere, **rotate it** — deleting it from a file does not undo the exposure.
 
 ## 🌱 Future Enhancements
 

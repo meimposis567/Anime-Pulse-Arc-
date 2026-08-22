@@ -6,23 +6,28 @@ import cors from "cors";
 import compression from "compression";
 import helmet from "helmet";
 import { LRUCache } from "lru-cache";
-import rateLimit from "express-rate-limit";
 import morgan from "morgan";
+// Imported first: it validates every secret and exits the process if the
+// configuration is missing or unsafe, before anything starts listening.
+import { config } from "./config.js";
 import { connectDB } from "./db.js";
+import { apiLimiter } from "./middleware/rateLimit.js";
 import authRoutes from "./routes/auth.js";
 import favoritesRoutes from "./routes/favorites.js";
 import reviewsRoutes from "./routes/reviews.js";
 
 const app = express();
-const isProd = process.env.NODE_ENV === "production";
+const isProd = config.isProd;
 if (!isProd) app.use(morgan("tiny"));
 
 app.set("etag", "strong");
 app.disable("x-powered-by");
+// Trust exactly one proxy hop, so req.ip is the real client address and the
+// rate limiters cannot be defeated with a spoofed X-Forwarded-For header.
 app.set("trust proxy", 1);
 
-const PORT = process.env.PORT || 5001;
-const ANILIST_URL = process.env.ANILIST_URL || "https://graphql.anilist.co";
+const PORT = config.port;
+const ANILIST_URL = config.anilistUrl;
 
 /* ---------------------- Security & Core Middleware ---------------------- */
 app.use(
@@ -38,7 +43,7 @@ const allowedOrigins = [
   "http://127.0.0.1:3000",
   "http://localhost:5173",
   "http://127.0.0.1:5173",
-  process.env.FRONTEND_URL, // e.g., https://myapp.example.com
+  config.frontendUrl, // e.g., https://myapp.example.com
 ].filter(Boolean);
 
 app.use(
@@ -57,17 +62,14 @@ app.use(
   })
 );
 
-// Global rate limiter (skips health & auth)
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 300,
-  standardHeaders: true,
-  legacyHeaders: false,
-});
+// Global rate limiter. Only the health probe is exempt.
+//
+// /api/auth is deliberately NOT skipped here: it carries its own, much
+// stricter per-route limiters (see middleware/rateLimit.js), so login and
+// registration are throttled harder than browsing, not less.
 app.use((req, res, next) => {
-  if (req.path.startsWith("/health") || req.path.startsWith("/api/auth"))
-    return next();
-  return limiter(req, res, next);
+  if (req.path.startsWith("/health")) return next();
+  return apiLimiter(req, res, next);
 });
 
 app.use(compression());
@@ -168,7 +170,10 @@ app.get(
 app.get(
   "/api/search",
   asyncHandler(async (req, res) => {
-    const q = (req.query.q || "").trim();
+    const raw = req.query.q;
+    // Reject non-string query params (?q=a&q=b arrives as an array) and cap
+    // the length so the upstream cache key cannot be inflated arbitrarily.
+    const q = (typeof raw === "string" ? raw : "").trim().slice(0, 100);
     if (!q) return res.json([]);
     const query = `
       query($q:String,$page:Int,$perPage:Int){
@@ -194,7 +199,8 @@ app.get(
   "/api/anime/:id",
   asyncHandler(async (req, res) => {
     const id = Number(req.params.id);
-    if (!Number.isFinite(id)) return res.status(400).json({ error: "Invalid anime id" });
+    if (!Number.isInteger(id) || id <= 0)
+      return res.status(400).json({ error: "Invalid anime id" });
 
     const query = `
       query($id:Int){
@@ -334,35 +340,65 @@ app.use("/api/auth", authRoutes);
 app.use("/api/favorites", favoritesRoutes);
 app.use("/api/reviews", reviewsRoutes);
 
-// Simple status endpoint to help UI decide what to show
+// Simple status endpoint to help UI decide what to show.
+// Deliberately minimal: no versions, no config, nothing that helps fingerprint
+// the deployment.
 app.get("/api/status", (req, res) => {
-  res.json({
-    api: "ok",
-    env: process.env.NODE_ENV || "development",
-  });
+  res.json({ api: "ok" });
+});
+
+/* -------------------------------- 404 ----------------------------------- */
+app.use((req, res) => {
+  res.status(404).json({ error: "Not found" });
 });
 
 /* ------------------------------ Error Handler --------------------------- */
+// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-  // Centralized logging
-  console.error("Server error:", err);
-  const message = isProd
-    ? "Something went wrong."
-    : err?.message || "Internal Server Error";
-  res.status(500).json({ error: message });
+  const status = Number(err?.status) || 500;
+
+  // Full detail stays in the server log, never on the wire.
+  if (status >= 500) {
+    console.error("Server error:", err);
+  } else if (!isProd) {
+    console.warn(`${status} ${req.method} ${req.originalUrl}: ${err?.message}`);
+  }
+
+  // Only messages we wrote ourselves (HttpError) are echoed back. Raw
+  // exception text can disclose file paths, driver internals, query shapes
+  // and connection strings, so it is replaced with a generic message.
+  const safeMessage = err?.expose && err?.message
+    ? err.message
+    : status >= 500
+      ? "Something went wrong."
+      : "Invalid request.";
+
+  res.status(status).json({ error: safeMessage });
 });
 
 /* --------------------- Connect Mongo & Start the Server ------------------ */
 (async () => {
   try {
-    await connectDB(process.env.MONGODB_URI);
+    await connectDB();
     console.log("✅ MongoDB connected");
   } catch (err) {
     console.error("⚠️ Mongo connection failed:", err.message);
     // Continue running so non-DB routes (featured/search/anilist) still work
   }
 
-  app.listen(PORT, () => {
+  const server = app.listen(PORT, () => {
     console.log(`✅ API running on http://localhost:${PORT}`);
   });
+
+  // Never let an unexpected fault leave the process in an undefined state.
+  process.on("unhandledRejection", (reason) => {
+    console.error("Unhandled promise rejection:", reason);
+  });
+  for (const sig of ["SIGINT", "SIGTERM"]) {
+    process.on(sig, () => {
+      console.log(`
+${sig} received, shutting down.`);
+      server.close(() => process.exit(0));
+    });
+  }
 })();

@@ -1,37 +1,105 @@
 import { Router } from 'express';
-import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
+import { signToken, authRequired } from '../middleware/auth.js';
+import { loginLimiter, registerLimiter } from '../middleware/rateLimit.js';
+import { asyncHandler, conflict, unauthorized } from '../utils/asyncHandler.js';
+import {
+  requireEmail,
+  requireUsername,
+  requireStrongPassword,
+  requireLoginPassword,
+} from '../utils/validate.js';
 
 const router = Router();
 
-router.post('/register', async (req,res)=>{
-  try{
-    const { username, email, password } = req.body;
-    if(!username || !email || !password) return res.status(400).json({error:'Missing fields'});
-    const existing = await User.findOne({ $or: [{email},{username}] });
-    if(existing) return res.status(409).json({error:'User already exists'});
-    const user = new User({ username, email, passwordHash: '' });
-    await user.setPassword(password);
-    await user.save();
-    const token = jwt.sign({ id: user._id, username: user.username, role: user.role }, process.env.JWT_SECRET || 'dev_secret', { expiresIn: '7d' });
-    res.json({ token, user: { id: user._id, username: user.username, email: user.email, role: user.role } });
-  }catch(e){
-    res.status(500).json({error:e.message});
-  }
+/**
+ * A precomputed hash of a value nobody knows, compared against when the
+ * requested account does not exist. Without it, a missing user returns far
+ * faster than a wrong password, and that timing difference alone tells an
+ * attacker which email addresses are registered.
+ */
+const DUMMY_HASH = bcrypt.hashSync('anime-pulse-arc::timing-equaliser', 12);
+
+/** Fields that are safe to send back to the client. */
+const publicUser = (user) => ({
+  id: String(user._id),
+  username: user.username,
+  email: user.email,
+  role: user.role,
 });
 
-router.post('/login', async (req,res)=>{
-  try{
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if(!user) return res.status(401).json({error:'Invalid credentials'});
+/* -------------------------------- Register ------------------------------- */
+
+router.post(
+  '/register',
+  registerLimiter,
+  asyncHandler(async (req, res) => {
+    // Validated to primitive strings before touching the database, so a body
+    // like {"email": {"$gt": ""}} cannot become a MongoDB query operator.
+    const username = requireUsername(req.body?.username);
+    const email = requireEmail(req.body?.email);
+    const password = requireStrongPassword(req.body?.password);
+
+    const existing = await User.findOne({ $or: [{ email }, { username }] })
+      .select('_id')
+      .lean();
+    if (existing) throw conflict('An account with that email or username already exists');
+
+    const user = new User({ username, email, passwordHash: '' });
+    await user.setPassword(password);
+
+    try {
+      await user.save();
+    } catch (e) {
+      // Two simultaneous signups can both pass the check above; the unique
+      // index is the real guarantee.
+      if (e?.code === 11000) {
+        throw conflict('An account with that email or username already exists');
+      }
+      throw e;
+    }
+
+    res.status(201).json({ token: signToken(user), user: publicUser(user) });
+  })
+);
+
+/* --------------------------------- Login --------------------------------- */
+
+router.post(
+  '/login',
+  loginLimiter,
+  asyncHandler(async (req, res) => {
+    const email = requireEmail(req.body?.email);
+    const password = requireLoginPassword(req.body?.password);
+
+    // passwordHash is `select: false` on the schema, so ask for it explicitly.
+    const user = await User.findOne({ email }).select('+passwordHash');
+
+    if (!user) {
+      // Burn the same time a real comparison would take, then fail
+      // identically to a wrong password — no account enumeration.
+      await bcrypt.compare(password, DUMMY_HASH);
+      throw unauthorized('Invalid credentials');
+    }
+
     const ok = await user.validatePassword(password);
-    if(!ok) return res.status(401).json({error:'Invalid credentials'});
-    const token = jwt.sign({ id: user._id, username: user.username, role: user.role }, process.env.JWT_SECRET || 'dev_secret', { expiresIn: '7d' });
-    res.json({ token, user: { id: user._id, username: user.username, email: user.email, role: user.role } });
-  }catch(e){
-    res.status(500).json({error:e.message});
-  }
-});
+    if (!ok) throw unauthorized('Invalid credentials');
+
+    res.json({ token: signToken(user), user: publicUser(user) });
+  })
+);
+
+/* --------------------------------- Whoami -------------------------------- */
+
+router.get(
+  '/me',
+  authRequired,
+  asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user.id).lean();
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    res.json({ user: publicUser(user) });
+  })
+);
 
 export default router;
